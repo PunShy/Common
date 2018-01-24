@@ -100,3 +100,79 @@ public class DbWoker
     }
     
 }
+
+
+#region DbWoker 調用範例
+public class DbWorker_Sample
+{
+    public static string delete()
+    {
+        DbWoker dw1 = new DbWoker();
+        dw1.ConectionStr = @"Provider=SQLOLEDB;Server=localhost;uid=sa;pwd=as;database=CPAMI";//System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnFormatString"].ConnectionString;
+        string str = @"DELETE FROM [dbo].[ContentData]
+                           WHERE kind=? and city=? and step=?";
+        OleDbCommand command = new OleDbCommand(str);
+        command.Parameters.Add("kind", OleDbType.VarChar).Value = "2";
+        command.Parameters.Add("city", OleDbType.VarChar).Value = "T11";
+        command.Parameters.Add("step", OleDbType.VarChar).Value = "1";
+
+        int count = dw1.InsertData(command);
+        return "";
+    }
+    public static string update()
+    {
+        DbWoker dw1 = new DbWoker();
+        dw1.ConectionStr = @"Provider=SQLOLEDB;Server=localhost;uid=sa;pwd=as;database=CPAMI";//System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnFormatString"].ConnectionString;
+        string str = @"UPDATE [dbo].[ContentData]
+                           SET [textInfo]=?
+                           WHERE kind=? and city=? and step=?";
+        OleDbCommand command = new OleDbCommand(str);
+        command.Parameters.Add("textInfo", OleDbType.VarWChar).Value = "ER只是測試看看內文物???";
+        command.Parameters.Add("kind", OleDbType.VarChar).Value = "2";
+        command.Parameters.Add("city", OleDbType.VarChar).Value = "T11";
+        command.Parameters.Add("step", OleDbType.VarChar).Value = "1";
+
+        int count = dw1.InsertData(command);
+        return "";
+    }
+    public static string Insert()
+    {
+        DbWoker dw1 = new DbWoker();
+        dw1.ConectionStr = @"Provider=SQLOLEDB;Server=localhost;uid=sa;pwd=as;database=CPAMI";//System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnFormatString"].ConnectionString;
+        string str = @"INSERT INTO [dbo].[ContentData]
+           ([kind]
+           ,[city]
+           ,[step]
+           ,[planName]
+           ,[textInfo]
+           ,[date])
+     VALUES
+           (?,?,?,?,?,?)";
+        OleDbCommand command = new OleDbCommand(str);
+        command.Parameters.Add("kind", OleDbType.VarChar).Value = "2";
+        command.Parameters.Add("city", OleDbType.VarChar).Value = "T11";
+        command.Parameters.Add("step", OleDbType.VarChar).Value = "1";
+        command.Parameters.Add("planName", OleDbType.VarWChar).Value = "只是測試看看";
+        command.Parameters.Add("textInfo", OleDbType.VarWChar).Value = "只是測試看看內文物";
+        command.Parameters.Add("date", OleDbType.Date).Value = DateTime.Now.ToString("yyyy/MM/dd HH:mm:sss");
+
+        int count = dw1.InsertData(command);
+        return "";
+    }
+
+    public static string Get()
+    {
+        DbWoker dw1 = new DbWoker();
+        dw1.ConectionStr = @"Provider=SQLOLEDB;Server=localhost;uid=sa;pwd=as;database=CPAMI";//System.Web.Configuration.WebConfigurationManager.ConnectionStrings["ConnFormatString"].ConnectionString;
+        string str = @"SELECT distinct city,planName,textInfo
+                       FROM ContentData
+                       where kind = ? and city = ?";
+        OleDbCommand command = new OleDbCommand(str);
+        command.Parameters.Add("kind", OleDbType.VarChar).Value = "2";
+        command.Parameters.Add("city", OleDbType.VarChar).Value = "T10";
+
+        DataTable dt1 = dw1.GetData(command);
+        return "";
+    }
+}
+#endregion
