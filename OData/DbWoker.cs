@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.OleDb;
 
@@ -98,7 +99,33 @@ public class DbWoker
         }
         return result;
     }
-    
+
+
+    /// <summary>
+    /// DataTable轉成指定Class物件，簡易版本。
+    /// EX: var dt1 = _dbWoker1.GetData(command).AsEnumerable();
+    ///     List<StatisticsChart> svmList = GetDbData<StatisticsChart>(dt1);
+    /// </summary>
+    /// <typeparam name="T">轉換目標Class</typeparam>
+    /// <param name="dt1">來源DB資料，dt1.AsEnumerable()</param>
+    /// <returns>指定Calss物件的集合</returns>
+    public List<T> GetDbData<T>(EnumerableRowCollection<DataRow> dt1) where T : class, new()
+    {
+        List<T> rcmList = new List<T>();
+        string tempVal = null;
+        foreach (var item in dt1)
+        {
+            T rcm1 = new T();
+            var temp = rcm1.GetType().GetProperties();
+            foreach (var pro in temp)
+            {
+                tempVal = item[pro.Name].ToString();
+                pro.SetValue(rcm1, (string.IsNullOrEmpty(tempVal)) ? "" : tempVal);
+            }
+            rcmList.Add(rcm1);
+        }
+        return rcmList;
+    }
 }
 
 
